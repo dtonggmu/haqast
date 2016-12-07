@@ -1,6 +1,6 @@
 import matplotlib.colors as mcolors
 from matplotlib import cm
-from numpy import vstack,arange
+from numpy import vstack,arange,linspace
 
 def o3cmap():
     # This function returns the colormap and bins for the ozone spatial plots
