@@ -20,9 +20,12 @@ def make_spatial_plot(cmaqvar, x, y, date, m, dpi=None, savename='', levs=arange
     m.drawcoastlines(linewidth=.3)
     m.drawcountries()
     plt.axis('off')
-    ncolors = len(levs)
-    c, cmap = colorbar_index(ncolors, cmap,levs)
-    m.pcolormesh(x, y, cmaqvar, vmin=min(levs), vmax=max(levs), cmap=cmap)
+    
+    #EDITTED THIS LINE
+    m.contourf(x,y,cmaqvar,levels=levs,extend='max',cmap=cmap
+    #ncolors = len(levs)
+    #c, cmap = colorbar_index(ncolors, cmap,levs)
+    #m.pcolormesh(x, y, cmaqvar, vmin=min(levs), vmax=max(levs), cmap=cmap)
     titstring = date
     plt.title(titstring)
 
@@ -112,6 +115,7 @@ def main(concfile,gridfile,param):
     from netCDF4 import Dataset,MFDataset
     from mpl_toolkits.basemap import Basemap
     from numpy import unique,array
+    import colorbars as cbars
     
     concfiles = ['temp/20161114/aqm.t12z.aconc.ncf']
     grid = Dataset('MAY2014/aqm.t12z.grdcro2d.ncf')
@@ -137,9 +141,10 @@ def main(concfile,gridfile,param):
     #get ozone
     o3 = concobj.variables['O3'][index,0,:,:].squeeze() * 1000.
     #to make an image for each time loop through
+    o3cmap,bins = cbars.o3cmap()
     for i,j in enumerate(d):
       date = j.strftime('%m/%d/%Y %H')
-      make_spatial_plot(o3[i,:,:], x, y, date, m, levs=arange(10,110,10), cmap='RdBu_r')
+      make_spatial_plot(o3[i,:,:], x, y, date, m, levs=bins, cmap=o3cmap)
       plt.savefig(j.strftime('%Y%m%d%H_o3.jpg'),dpi=100)
       print ' plot made for: ' + date
       plt.close()
