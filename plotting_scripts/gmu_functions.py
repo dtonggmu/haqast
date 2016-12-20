@@ -12,7 +12,7 @@ def readfile(file):
     from netCDF4 import MFDataset
     return MFDataset(file)
 
-def make_spatial_plot(cmaqvar, x, y, date, m, dpi=None, savename='', levs=arange(10,110,10), cmap='YlGnBu'):
+def make_spatial_plot(cmaqvar, x, y, date, m, dpi=None, savename='', levs=arange(10,110,10), cmap='YlGnBu',cbarlabel='O3 (pbbv)'):
     from numpy import arange
     fig = plt.figure(figsize=(18, 10), frameon=False)
     # define map and draw boundries
@@ -23,6 +23,8 @@ def make_spatial_plot(cmaqvar, x, y, date, m, dpi=None, savename='', levs=arange
     
     #EDITTED THIS LINE
     m.contourf(x,y,cmaqvar,levels=levs,extend='max',cmap=cmap
+    c = plt.colorbar()
+    c.set_label(cbarlabel)
     #ncolors = len(levs)
     #c, cmap = colorbar_index(ncolors, cmap,levs)
     #m.pcolormesh(x, y, cmaqvar, vmin=min(levs), vmax=max(levs), cmap=cmap)
@@ -144,7 +146,7 @@ def main(concfile,gridfile,param):
     o3cmap,bins = cbars.o3cmap()
     for i,j in enumerate(d):
       date = j.strftime('%m/%d/%Y %H')
-      make_spatial_plot(o3[i,:,:], x, y, date, m, levs=bins, cmap=o3cmap)
+      make_spatial_plot(o3[i,:,:], x, y, date, m, levs=bins, cmap=o3cmap,cbarlabel='O3 (pbbV)')
       plt.savefig(j.strftime('%Y%m%d%H_o3.jpg'),dpi=100)
       print ' plot made for: ' + date
       plt.close()
